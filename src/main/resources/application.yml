@@ -31,4 +31,4 @@ spring:
     password: application
   jpa:
     hibernate:
-      ddl-auto: update    # 초기 개발 단계만 (나중엔 validate/Flyway 권장)
+      ddl-auto: create    # 테이블 새로 생성

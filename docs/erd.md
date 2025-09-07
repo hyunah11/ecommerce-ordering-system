@@ -21,14 +21,14 @@ erDiagram
 
     USERS {
       bigint id PK
-      text name
-      bigint created_at
+      varchar(n) name
+      TIMESTAMP created_at
     }
 
     WALLETS {
       bigint user_id PK,FK
       bigint balance
-      bigint updated_at
+      timestamp updated_at
     }
 
     WALLET_TRANSACTIONS {
@@ -36,43 +36,43 @@ erDiagram
       bigint user_id FK
       bigint amount  "signed delta"
       bigint balance_after
-      text reason
-      text idempotency_key
-      bigint created_at
+      varchar(n) reason
+      varchar(n) idempotency_key
+      timestamp created_at
       %% UNIQUE(user_id, idempotency_key)
       unique user_id__idempotency_key
     }
 
     PRODUCTS {
       bigint id PK
-      text name
+      varchar(n) name
       bigint price
       int stock
-      text status  "ON_SALE, PAUSED, OFF"
-      bigint created_at
-      bigint updated_at
+      enum status  "ON_SALE, PAUSED, OFF"
+      timestamp created_at
+      timestamp updated_at
     }
 
     PRODUCT_STOCK_LEDGER {
       bigint id PK
       bigint product_id FK
       int delta_qty "(-) for sell"
-      text reason "ORDER, CANCEL, ADJUST"
+      enum reason "ORDER, CANCEL, ADJUST"
       bigint order_item_id
-      bigint created_at
+      timestamp created_at
     }
 
     COUPONS {
       bigint id PK
-      text name
-      text discount_type "AMOUNT|PERCENT"
+      varchar(n) name
+      enum discount_type "AMOUNT|PERCENT"
       bigint amount "if AMOUNT"
       int percent "if PERCENT"
       bigint max_discount "cap for PERCENT"
       bigint min_order_amount
       int total_quantity "FCFS cap"
-      bigint starts_at
-      bigint expires_at
+      timestamp starts_at
+      timestamp expires_at
       int per_user_limit
     }
 
@@ -80,9 +80,9 @@ erDiagram
       bigint id PK
       bigint coupon_id FK
       bigint user_id FK
-      text status "ISSUED|USED|EXPIRED"
-      bigint issued_at
-      bigint used_at
+      enum status "ISSUED|USED|EXPIRED"
+      timestamp issued_at
+      timestamp used_at
       %% UNIQUE(coupon_id, user_id)
       unique coupon_id__user_id "1/user"
     }
@@ -90,12 +90,12 @@ erDiagram
     ORDERS {
       bigint id PK
       bigint user_id FK
-      text status "CREATED|PAID|CANCELED"
+      enum status "CREATED|PAID|CANCELED"
       bigint subtotal
       bigint discount
       bigint total_amount
-      bigint created_at
-      bigint updated_at
+      timestamp created_at
+      timestamp updated_at
     }
 
     ORDER_ITEMS {
@@ -112,20 +112,20 @@ erDiagram
       bigint order_id FK
       %% UNIQUE(order_id)
       bigint user_id FK
-      text method "WALLET"
+      varchar(n) method "WALLET"
       bigint amount
-      text status "SUCCEEDED|FAILED"
-      bigint created_at
+      enum status "SUCCEEDED|FAILED"
+      timestamp created_at
     }
 
     OUTBOX_EVENTS {
       bigint id PK
-      text aggregate_type "ORDER"
+      varchar(n) aggregate_type "ORDER"
       bigint aggregate_id
-      text event_type "ORDER_PAID"
+      varchar(n) event_type "ORDER_PAID"
       jsonb payload
-      text status "READY|SENT|FAILED"
-      bigint created_at
+      enum status "READY|SENT|FAILED"
+      timestamp created_at
       %% INDEX(status, created_at)
       index status__created_at
     }
