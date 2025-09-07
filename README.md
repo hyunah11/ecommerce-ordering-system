@@ -10,6 +10,20 @@
 - [ERD](./docs/erd.md)
 - [인프라 구성도 및 컴포넌트 설명](./docs/infra.md)
 
+### Architecture
+
+Clean Layered Architecture 기반 의존성 역전 구조
+
+```
+Controller → Application → Domain Port ← Infrastructure
+```
+
+- **Controller**: HTTP 요청/응답 처리
+- **Application**: 비즈니스 유스케이스 및 트랜잭션 경계  
+- **Domain Port**: 도메인 계층의 데이터 접근 추상화 (Repository Interface)
+- **Infrastructure**: JPA 기반 실제 구현체
+- **Domain**: 순수 POJO 기반 비즈니스 로직
+
 ### Prerequisites
 - JDK 17
 - Gradle (Wrapper로 실행 가능 ./gradlew)
